@@ -29,6 +29,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             }
         }
         
+        // No Access for blacklisted rooms
         if (!(blacklist.indexOf(room) != -1)) {
 
             //Introduce
