@@ -9,6 +9,7 @@ const roulpath = "roulette.txt";
 const blacklist = ["유학생들모여라"];
 const gangroom = ["서지원", "차에탄깡따구"];
 const RUSSIANROULETTE_COUNT = 6;
+const roul_delay = {};
 
 // Main
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
@@ -211,11 +212,13 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             let playedtime = Number(data[2]);
             let nowtime = date.getTime();
             
-            let delaytime = 30000 // 30 sec
+            if (roul_delay[room] == undefined) {
+                roul_delay[room] = 30000 // 30sec default
+            }
             
             if (String(roulcount) != "NaN" && String(randpick) != "NaN" && String(playedtime) != "NaN") {
                     if (nbcmd == "!러시안룰렛") {
-                        if (nowtime - playedtime > delaytime) { // if the time passed 30 sec since last played
+                        if (nowtime - playedtime > roul_delay[room]) {
                             if (roulcount > RUSSIANROULETTE_COUNT && roulcount < 1) {
                                 roulcount == RUSSIANROULETTE_COUNT;
                             }
@@ -243,17 +246,32 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                                 replier.reply("...");
 
                                 roulcount--;
-                                replier.reply("다행히도 이번엔 총알이 없었습니다, " + sender + "님!");// (남은 탄창 수: " + roulcount + ")");
+                                replier.reply("다행히도 이번엔 총알이 없었습니다, " + sender + "님! (남은 탄창 수: " + roulcount + ")");
                             }
                             
                             let save = roulcount + " " + randpick + " " + nowtime;
 
                             WriteFile(replier, save, room, roulpath);
                         } else {
-                            replier.reply("🔫 러시안룰렛은 " + (delaytime/1000) + "초에 한번씩만 시도할 수 있습니다. 잠시 후에 시도해주시길 바랍니다." + ((delaytime - (nowtime-playedtime))/1000).toFixed() + "초 남음");
+                            replier.reply("🔫 러시안룰렛은 " + (roul_delay[room]/1000) + "초에 한번씩만 시도할 수 있습니다. 잠시 후에 시도해주시길 바랍니다." + ((roul_delay[room] - (nowtime-playedtime))/1000).toFixed() + "초 남음");
                         }
                     } else if (["남은개수", "개수", "남은횟수", "횟수"].indexOf(addcmd) != -1) {
                         replier.reply("🔫 남은 탄창 수: " + roulcount);
+                    } else if (["초기화", "리셋"].indexOf(addcmd) != -1) {
+                        let save = 6 + " " + 1 + " " + playedtime;
+
+                        WriteFile(replier, save, room, roulpath);
+
+                        replier.reply("러시안룰렛이 초기화되었습니다. 혹시라도 러시안 룰렛 게임을 악의적으로 엎어버릴 용도로 사용할 시에는 산책이 주어집니다");
+                    } else if (room == "서지원") {
+                        if (cmd == "!러시안룰렛시간설정") {
+                            if (String(Number(option[1])) != "NaN") {
+                                roul_delay[option[0]] = Number(option[1]);
+                                replier.reply(option[0] + ", " + option[1] + "ms로 러시안룰렛 대기시간 설정 완료");
+                            } else {
+                                replier.reply("제대로 입력해주세요");
+                            }
+                        }
                     }
             } else {
                 replier.reply("무언가 오류가 있어 러시안룰렛을 실행시키지 못했습니다. 이거 봇만든사람 부르십쇼.");
