@@ -147,49 +147,6 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 
             replier.reply(rank);
         }
-        
-        /*
-        if (nbcmd == "!멜론차트" && room == "서지원") {
-            let data = Utils.getWebText("https://www.melon.com/chart/index.htm", "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",false,false);
-            let top = [];
-            let str = "";
-            let isgang = false;
-            let gangrank;
-            
-            replier.repy(data);
-            
-            top[0] = data.split("id=\"lst50\"");
-            top[1] = data.split("id=\"lst100\"");
-            
-            for (let i = 0; i < top.length; i++) {
-                for (let j = 1; j < top[i].length; j++) {
-                    let title = top[i][j].split("재생\">")[1].split("<")[0];
-                    let singer = top50[i][j].split("class=\"ellipsis rank02\">")[1].split("\">")[1].split("<")[0];
-                    replier.reply(title);
-                    replier.reply(singer);
-                    
-                    if (title == "깡") {
-                        isgang = true;
-                        gangrank = (i ? (j + 50) : j);
-                    }
-                    
-                    if (!(i == 0 && j == 1)) {
-                        str += "\n";
-                    }
-                    str += (i ? (j + 50) : j) + "위 " + singer + " - " + title;
-                }
-            }
-            
-            replier.reply(str);
-            
-            if (isgang && gangroom.indexOf(room) != -1) {
-                replier.reply("축하합니다 드디어 깡이 차트인을 하여 " + gangrank + "위에 안착했습니다!!!");
-            } else if (!isgang && gangroom.indexOf(room) != -1) {
-                replier.reply("안타깝게도 아직 깡은 TOP100에 들지 못했습니다 힝...");
-            }
-            
-            
-        }*/
     } catch (e) {
         let str = ReadFile(replier, "log", "errorlog.txt");
         str +=  "\n" + room + ", " + THIS_FILENAME + ", "+ e + ", " + e.lineNumber;
