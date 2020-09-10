@@ -4,12 +4,15 @@
 */
 
 const THIS_FILENAME = "All";
-const filepath = "/storage/emulated/0/Documents/KakaoBot/";
-const roulpath = "roulette.txt";
-const blacklist = ["유학생들모여라"];
+const filepath = "/storage/emulated/0/KakaobotData";
+const hellocountpath = "hellocount.txt";
+const hellocount_allowed_room =["유학생들모여라", "서지원"];
+
+const MASTER_ROOM = "서지원"; // master room
+const blacklist = ["키보드팬들모여라"]; 
 const gangroom = ["서지원", "차에탄깡따구"];
-const RUSSIANROULETTE_COUNT = 6;
-const roul_delay = {};
+
+var ison = false;
 
 // Main
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
@@ -22,27 +25,29 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         var cmd = list[0];
         var option = [];
         var nbcmd = msg.replace(/\s/g, "");
+        var nbsender = sender.replace(/\s/g, "");
 
-        // options after cmd
+        // options after cmd divided by space
         for (let i = 0; i < list.length; i++) {
             if (i != 0) {
                 option[i-1] = list[i];
             }
         }
+
+        /*
+          CMD starts
+        */
         
         // No Access for blacklisted rooms
         if (!(blacklist.indexOf(room) != -1)) {
-
-            //Introduce
             if (["!누구세요", "!명령어"].indexOf(nbcmd) != -1) {
-                replier.reply("안녕하세요. 저는 지원이가 만든 지원봇입니다.\n필요한게 있으면 저를 불러보세요. 저는 특히 식사 메뉴 추천에 특화되어 있습니다.\n\n!아침추천 !점심추천 !저녁추천 !야식추천 !간식추천\n!날씨 -> 지역 이름을 넣으면 해당 지역의 날씨를 보여줍니다\n!코로나\n!실검\n!주사위\n!동전던지기\n!골라줘\n!윷놀이\n!러시안룰렛\n!가위바위보 (단, 인성이 터졌으니 주의)\n!나 오늘 생일이야\n\n또한 숨겨진 명령어도 많이 있으니 찾아보시기 바랍니다");
+                replier.reply("안녕하세요. 저는 지원이가 만든 지원봇입니다.\n필요한게 있으면 저를 불러보세요.\n\n!아침추천 !점심추천 !저녁추천 !야식추천 !간식추천\n!날씨 -> 지역 이름을 넣으면 해당 지역의 날씨를 보여줍니다\n!코로나 !실검\n!주사위 !동전던지기 !골라줘\n!윷놀이 !러시안룰렛\n!가위 !바위 !보 -> 가위바위보 하기\n!나 오늘 생일이야");
 
                 if (gangroom.indexOf(room) != -1) {
                      replier.reply("그리고 깡따구들을 위한 !깡령어 도 마련되어있드아아앙~");
                 }
             }
-
-            //For All    
+    
             if (cmd == "!가위바위보") {
                 replier.reply("가위바위보 해요ㅎㅎ\n!가위 !바위 !보\n근데 가끔 제가 변덕이 심할 때가 있으니 양해 부탁드려용");
             }
@@ -204,132 +209,62 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             }
         }
         
-        if (nbcmd.split("!러시안룰렛")[0] == "") {
-            let addcmd = nbcmd.replace("!러시안룰렛", "");
-            let data = ReadFile(replier, room, roulpath).split(" ");
-            let roulcount = Number(data[0]);
-            let randpick = Number(data[1]);
-            let playedtime = Number(data[2]);
-            let nowtime = date.getTime();
-            
-            if (roul_delay[room] == undefined) {
-                roul_delay[room] = 30000 // 30sec default
-            }
-            
-            if (String(roulcount) != "NaN" && String(randpick) != "NaN" && String(playedtime) != "NaN") {
-                    if (nbcmd == "!러시안룰렛") {
-                        if (nowtime - playedtime > roul_delay[room]) {
-                            if (roulcount > RUSSIANROULETTE_COUNT && roulcount < 1) {
-                                roulcount == RUSSIANROULETTE_COUNT;
-                            }
+        if (nbcmd == "!점심추천" || nbcmd == "!저녁추천") {
+            FoodMenu("foodmenu.txt", replier);
+        }
 
-                            if (roulcount == RUSSIANROULETTE_COUNT) {
-                                randpick = Math.floor(Math.random() * RUSSIANROULETTE_COUNT) + 1;
-                            }
+        if (nbcmd == "!야식추천") {
+            FoodMenu("nightmenu.txt", replier);
+        }
 
-                            if (roulcount == randpick) {
-                                //당첨
-                                replier.reply("🔫 철컥... 탕!");
-                                if (room == "차에탄깡따구") { 
-                                    replier.reply("털썩... 꿱! 안타깝게도 " + sender + "님은 러시안룰렛에 당첨되셨습니다.");
-                                    replier.reply("🔫 러시안룰렛은 다시 처음으로 초기화되었습니다. 다음은 누가 당첨될까요?");
-                                } else {
-                                    replier.reply("털썩... 꿱! 안타깝게도 " + sender + "님은 러시안룰렛에 당첨되셨습니다. 뒤지십쇼!");
-                                    replier.reply("(싸늘한 " + sender + "의 시체에 내리쬐는 ✨화려한 조명✨)");
-                                    replier.reply("🔫 러시안룰렛은 다시 처음으로 초기화되었습니다. 다음은 누가 뒤질까요?");
-                                }
+        if (nbcmd == "!간식추천") {
+            FoodMenu("snackmenu.txt", replier);
+        }
 
-                                roulcount = RUSSIANROULETTE_COUNT;
-                            } else {
-                                //꽝
-                                replier.reply("🔫 철컥... 탕!");
-                                replier.reply("...");
+        if (nbcmd == "!음료추천") {
+            FoodMenu("drink.txt", replier);
+        }
 
-                                roulcount--;
-                                replier.reply("다행히도 이번엔 총알이 없었습니다, " + sender + "님! (남은 탄창 수: " + roulcount + ")");
-                            }
-                            
-                            let save = roulcount + " " + randpick + " " + nowtime;
+        if (nbcmd == "!아침추천") {
+            replier.reply("아침은 그냥 콩나물 국밥이나 드십쇼 형님");
+        }
 
-                            WriteFile(replier, save, room, roulpath);
-                        } else {
-                            replier.reply("🔫 러시안룰렛은 " + (roul_delay[room]/1000) + "초에 한번씩만 시도할 수 있습니다. 잠시 후에 시도해주시길 바랍니다." + ((roul_delay[room] - (nowtime-playedtime))/1000).toFixed() + "초 남음");
-                        }
-                    } else if (["남은개수", "개수", "남은횟수", "횟수"].indexOf(addcmd) != -1) {
-                        replier.reply("🔫 남은 탄창 수: " + roulcount);
-                    } else if (["초기화", "리셋"].indexOf(addcmd) != -1) {
-                        let save = 6 + " " + 1 + " " + playedtime;
+        if (nbcmd == "!디저트추천") {
+            replier.reply("디저트는 버블티나 드십쇼");
+        }
 
-                        WriteFile(replier, save, room, roulpath);
-
-                        replier.reply("러시안룰렛이 초기화되었습니다. 혹시라도 러시안 룰렛 게임을 악의적으로 엎어버릴 용도로 사용할 시에는 산책이 주어집니다");
-                    } else if (room == "서지원") {
-                        if (cmd == "!러시안룰렛시간설정") {
-                            if (String(Number(option[1])) != "NaN") {
-                                roul_delay[option[0]] = Number(option[1]);
-                                replier.reply(option[0] + ", " + option[1] + "ms로 러시안룰렛 대기시간 설정 완료");
-                            } else {
-                                replier.reply("제대로 입력해주세요");
-                            }
-                        }
-                    }
-            } else {
-                replier.reply("무언가 오류가 있어 러시안룰렛을 실행시키지 못했습니다. 이거 봇만든사람 부르십쇼.");
-            }
+        if (nbcmd == "!아침추천이유") {
+            replier.reply("지원이가 고1때 미국 오기 전에 한국에서 마지막으로 먹었던 아침식사가 콩나물 국밥이었기 때문입니당");
+        }
+        
+       // if (["!점심추가", "!저녁추가", "!메뉴추가"].indexOf(cmd) != -1) {
+      //      let foodlist = ReadFile(replier, foldername, "foodmenu.txt");
+      //  }
+        
+        //MasterRoom Only
+        if (room == MASTER_ROOM) {
+            if (ison)
+              replier.reply(msg.replace(/\n/g, "\\n"));
+              
+            if (msg == "/on")
+            ison = true;
+            else if (msg == "/off")
+            ison = false;
         }
     } catch (e) {
-        let str = ReadFile(replier, "log", "errorlog.txt");
-        str +=  "\n" + room + ", " + THIS_FILENAME + ", "+ e + ", " + e.lineNumber;
-        WriteFile(replier, str, "log", "errorlog.txt");
+        Log.debug(e + ", line: " + e.lineNumber + " from " + room);
     }
 }
 
-function gDate(choice) {
-    var date = new Date();
-    var datestr = (date.getMonth() + 1) + "월 " + date.getDate() + "일";
-    var timestr = date.getHours() + "시 " + date.getMinutes() + "분";
-    var fulldatestr = date.getFullYear() + "년 " + datestr;
-    var datetimestr = datestr + " " + timestr;
-    var fulldatetimestr = fulldatestr + " " + timestr;
-    var mhourstr = date.getHours() <= 12 ? "오전 " + date.getHours() : "오후 " + (date.getHours() - 12);
-    
-    switch(choice) {
-        case "month":
-            return date.getMonth() + 1;
-        case "d":
-            return date.getDate();
-        case "hour":
-            return date.getHours();
-        case "mhour":
-            return mhourstr;
-        case "min":
-            return date.getMinutes();
-        case "sec":
-            return date.getSeconds();
-        case "day":
-            return date.getDay();
-        case "date" : // 월 일
-            return datestr;
-        case "time" : // 시 분
-            return timestr;
-        case "fulldate" : // 년 월 일
-            return fulldatestr;
-        case "datetime" : // 월 일 시 분
-            return datetimestr;
-        case "fulldatetime" : // 년 월 일 시 분
-            return fulldatetimestr;
-        case "getTime":
-            return date.getTime();
-        default :
-            return "";
+function ReadFile(room, filename) {
+    var file = new java.io.File(filepath + "/" + room + "/" + filename);
+
+    if (!file.exists()) {
+        let newfile = file.createNewFile();
+        l = "";
+        
+        return l;
     }
-}
-
-function ReadFile(replier, room, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
-
-    if (!file.exists())
-        return null;
 
     var fis = new java.io.FileInputStream(file);
     var isr = new java.io.InputStreamReader(fis);
@@ -351,8 +286,8 @@ function ReadFile(replier, room, filename) {
     return str;
 }
 
-function WriteFile(replier, data, room, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
+function WriteFile(data, room, filename) {
+    var file = new java.io.File(filepath + "/" + room + "/" + filename);
 
     if (!file.exists())
         return;
@@ -362,4 +297,37 @@ function WriteFile(replier, data, room, filename) {
 
     fos.write(content.getBytes());
     fos.close();
+}
+
+function FoodMenu(type, replier) {
+    var file = new java.io.File(filepath + "/" + type);
+
+    if (!file.exists()) {
+        replier.reply("음...");
+        replier.reply("딱히 추천해드릴만한게 없네요 힝");
+
+        return;
+    }
+
+    var fis = new java.io.FileInputStream(file);
+    var isr = new java.io.InputStreamReader(fis);
+    var br = new java.io.BufferedReader(isr);
+    var line = "";
+    var menulist = [];
+
+    for (let i = 0; (line = br.readLine()) != null; i++) {
+        menulist[i] = line;
+    }
+
+    if (menulist.length != 0) {
+        let result = Math.floor(Math.random() * menulist.length);
+        replier.reply(menulist[result]);
+    } else {
+        replier.reply("음...");
+        replier.reply("딱히 추천해드릴만한게 없네요 힝");
+    }
+
+    fis.close();
+    isr.close();
+    br.close();    
 }

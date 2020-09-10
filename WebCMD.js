@@ -3,8 +3,7 @@
 */
 
 const THIS_FILENAME = "WebCMD";
-const filepath = "/storage/emulated/0/Documents/KakaoBot/";
-const gangroom = ["차에탄깡따구", "뽀로로와 친구들", "서지원"];
+const filepath = "/storage/emulated/0/KakaobotData";
 
 const COMPRESS = "​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​"; //전체보기 만들기용 투명문자 1000개
 
@@ -82,7 +81,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             let hour = t[0];
             let min = t[1];
             
-            replier.reply("대한민국 " + month + "월 " + day + "일 " + hour + "시 " + min + "분 기준\n" + "한강물의 온도는 섭씨 " + temp + "도입니다.");
+            replier.reply("대한민국 " + month + "월 " + day + "일 " + hour + "시 " + min + "분 기준\n" + "한강물의 온도는 섭씨 " + temp + "도입니다.\n*한강 폭우로 인해 8월 3일 이후 측정이 중단되었으니 양해부탁드립니다.");
         }
 
         if (nbcmd == "!코로나") {
@@ -148,9 +147,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             replier.reply(rank);
         }
     } catch (e) {
-        let str = ReadFile(replier, "log", "errorlog.txt");
-        str +=  "\n" + room + ", " + THIS_FILENAME + ", "+ e + ", " + e.lineNumber;
-        WriteFile(replier, str, "log", "errorlog.txt");
+        Log.debug(e + ", line: " + e.lineNumber + " from " + room);
     }
 }
 
@@ -174,21 +171,8 @@ function GetWeather(replier, room, loc, iscelsius) {
                 replier.reply("The weather in " + title + " is " + temp_f + "°F and " + sky + " at " + time);
         }
     } catch (e) {
-        switch (room) {
-            case "오버액션사랑방":
-                replier.reply("엥 뭔가 잘못돼서 오액토가 잡아갔어용...");
-                break;
-            case "차에탄깡따구":
-                replier.reply("엥 뭔가 잘못돼서 차에 탔어용...");
-                break;
-            default:
-                replier.reply("엥 뭔가 잘못돼서 정보를 불러올 수 없습니당...");
-                break;
-        }
-        
-        let str = ReadFile(replier, "log", "errorlog.txt");
-        str +=  "\n" + room + ", " + THIS_FILENAME + ", "+ e + ", " + e.lineNumber;
-        WriteFile(replier, str, "log", "errorlog.txt");
+        replier.reply("엥 뭔가 잘못돼서 정보를 불러올 수 없거나 지역 이름을 인식할 수가 없습니당...");
+        Log.debug(e + ", line: " + e.lineNumber + " from " + room);
     }
 }
 
@@ -231,43 +215,4 @@ switch(choice) {
     default :
         return "";
 }
-}
-
-function ReadFile(replier, room, filename) {
-var file = new java.io.File(filepath + room + "/" + filename);
-
-if (!file.exists())
-    return null;
-
-var fis = new java.io.FileInputStream(file);
-var isr = new java.io.InputStreamReader(fis);
-var br = new java.io.BufferedReader(isr);
-var line = "";
-var str = "";
-
-for (let i = 0; (line = br.readLine()) != null; i++) {
-    if (i != 0)
-        str += "\n";
-
-    str += line;
-}
-
-fis.close();
-isr.close();
-br.close();
-
-return str;
-}
-
-function WriteFile(replier, data, room, filename) {
-var file = new java.io.File(filepath + room + "/" + filename);
-
-if (!file.exists())
-    return;
-
-var fos = new java.io.FileOutputStream(file);
-var content = new java.lang.String(data);
-
-fos.write(content.getBytes());
-fos.close();
 }

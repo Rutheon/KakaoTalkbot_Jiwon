@@ -3,17 +3,22 @@
 */
 
 const THIS_FILENAME = "CustomCMD";
-const filepath = "/storage/emulated/0/Documents/KakaoBot/";
+const filepath = "/storage/emulated/0/KakaobotData";
 const cmdpath = "cmdlist.txt";
 const instapath = "instagramlist.txt";
+const birthdaypath = "birthdaypath.txt";
 const alloweduserpath = "alloweduserlist.txt";
 const mynamelistpath = "mynamelist.txt";
 
 const roomblacklist = [];
-const instaroomblacklist = ["뽀로로와친구들", "차에탄깡따구", "오버액션사랑방"];
+const master_room = "서지원";
+const instaroom_blacklist = ["뽀로로와친구들", "차에탄깡따구", "오버액션사랑방", "키보드팬들모여라"];
+const birthday_blacklist = ["차에탄깡따구"];
 const alluser_allowed_room =["뽀로로와친구들"];
 
-const COMPRESS = "​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​"; //전체보기 만들기용 투명문자 1000개
+const COMPRESS = "​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​"; //자세히 보기 만들기 투명문자 1000개
+const hello_delay = 7000;  // 7 sec
+const hello_time = {};
 
 function CmdData(c, r) {
     this.c = c;
@@ -25,17 +30,31 @@ function Reply(replier, room, msg, filename) {
     
     for (let i = 0; i < cmdlist.length; i++) {
         if (msg == cmdlist[i].c) {
-            replier.reply(cmdlist[i].r.replace(/\\n/g, "\n"));
+            if (["!인사"].indexOf(msg) != -1) {   //!인사 연속으로 반복 도배 방지
+                if (hello_time[room] == null || hello_time[room] == undefined)
+                    hello_time[room] = 0;
+
+                if (Number(gDate("getTime")) - hello_time[room] > hello_delay) {
+                    replier.reply(cmdlist[i].r.replace(/\\n/g, "\n").replace(/\\z/g, COMPRESS)); // \n는 enter, \z는 자세히보기
+                    hello_time[room] = gDate("getTime");
+                } else {
+                    replier.reply("skipped");
+                }
+            } else {
+                replier.reply(cmdlist[i].r.replace(/\\n/g, "\n").replace(/\\z/g, COMPRESS));
+            }
+            
         }
     }
 }
 
 // Read File and Return Data
 function ReadList(replier, room, type, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
+    var file = new java.io.File(filepath + "/" + room + "/" + filename);
 
     if (!file.exists()) {
-        l = {};
+        let newfile = file.createNewFile();
+        l = [];
         
         return l;
     }
@@ -77,7 +96,7 @@ function ReadList(replier, room, type, filename) {
 
 // boolean type false if no file exists
 function WriteList(replier, room, type, data, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
+    var file = new java.io.File(filepath + "/" + room + "/" + filename);
 
     if (!file.exists())
         return false;
@@ -109,9 +128,15 @@ function WriteList(replier, room, type, data, filename) {
     fos.close();
     
     // Back up files
-    let backup = ReadFile(replier, "Backup", "backup.txt");
-    backup += "\n\n" + str;
-    WriteFile(replier, backup, "Backup", "backup.txt");
+    const backupfilename = (gDate("fulldate") + "_" + room + "backup.txt").replace(/\s/g, "_");
+    let backup = ReadFile(replier, "Backup", backupfilename);
+
+    if (backup != "")
+        backup += "\n\n";
+
+    backup += gDate("fulldatetime") + "\n" + str;
+
+    WriteFile(replier, backup, "Backup", backupfilename);
     
     return true;
 }
@@ -120,7 +145,8 @@ function AddList(replier, room, msg, filename) {
     var list = msg.split(" ");
 
     if (list.length > 2 && list[2] != "") {
-        let li = msg.replace("!추가 ", "").split(/ (.+)/);
+        let li = msg.split(/ (.+)/)[1].split(/ (.+)/);
+
         let cm = li[0];
         let re = li[1];
 
@@ -135,6 +161,22 @@ function AddList(replier, room, msg, filename) {
             }
 
             if (!isfound) {
+                if (filename == birthdaypath) {
+                    let f = re.split("월")[0];
+                    let sli = re.split("월")[1].split("일");
+
+                    if (!sli[0].startsWith(" ")) {
+                        replier.reply("띄어쓰기 지켜서 \"X월 X일\"의 형식으로 입력해주세요");
+                        return;
+                    } else if (toString(Number(f)) == "NaN" || toString(Number(sli[0])) == "NaN" || sli[1] != "" || sli.length != 2) {
+                        replier.reply("띄어쓰기 지켜서 \"X월 X일\"의 형식으로 입력해주세요");
+                        return;
+                    } else if (!(Number(f) >= 1) || !(Number(f) <= 12) || !(Number(sli[0]) >= 1) || !(Number(sli[0]) <= 31)) {
+                        replier.reply("띄어쓰기 지켜서 \"X월 X일\"의 형식으로 입력해주세요");
+                        return;
+                    }
+                }
+
                 let curobj = new CmdData(cm, re);
 
                 cmdlist.push(curobj);
@@ -149,7 +191,12 @@ function AddList(replier, room, msg, filename) {
             replier.reply("명령어는 !으로 시작해야합니다.");
         }
     } else {
-        replier.reply("명령어 추가하는 방법\n!추가 명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n예) !추가 !지원이는? 지원이는 귀엽다.");
+        if (msg.startsWith("!인스타추가"))
+            replier.reply("인스타 추가하는 방법\n!인스타추가 !명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n예) !인스타추가 !지원이인스타 @ziwo.ni_zi");
+        else if (msg.startsWith("!생일추가"))
+            replier.reply("생일 추가하는 방법\n!생일추가 !명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n또한 무조건 \"X월 X일\"의 형태로 입력해야함 안하면 에러나니깐 꼭 지키셈 validation 코드 짜기 개귀찮아 에러나면 책임안짐 ㅅㄱ\n예) !생일추가 !지원이생일 2월 9일");
+        else
+            replier.reply("명령어 추가하는 방법\n!추가 !명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n예) !추가 !지원이는? 지원이는 귀엽다.");
     }
 }
 
@@ -157,7 +204,11 @@ function RemoveList(replier, room, msg, filename) {
     var list = msg.split(" ");
 
     if (list.length > 1 && list[1] != "") {
-        var cmd = msg.replace("!제거 ", "").replace("!삭제 ", "");
+        var cmd = msg.split(/ (.+)/)[1];
+        
+        if (cmd.charAt(0) != "!")
+            cmd = "!" + cmd;
+
         var cmdlist = ReadList(replier, room, "cmdlist", filename);
         var isfound = false;
         var numfound;
@@ -184,7 +235,73 @@ function RemoveList(replier, room, msg, filename) {
         }
 
     } else {
-        replier.reply("명령어 제거하는 방법\n!제거 명령어 \n\n예) !제거 !햇쨜이강퇴");
+        if (msg.startsWith("!인스타제거") || msg.startsWith("!인스타삭제"))
+            replier.reply("인스타 제거하는 방법\n!인스타제거 !명령어 \n\n예) !인스타제거 !햇쨜이인스타");
+        else if (msg.startsWith("!인스타제거") || msg.startsWith("!인스타삭제"))
+            replier.reply("생일 제거하는 방법\n!생일제거 !명령어 \n\n예) !생일제거 !햇쨜이생일");
+        else
+            replier.reply("명령어 제거하는 방법\n!제거 !명령어 \n\n예) !제거 !햇쨜이강퇴");
+    }
+}
+
+function ChangeList(replier, room, msg, filename) {
+    var list = msg.split(" ");
+
+    if (list.length > 2 && list[2] != "") {
+        var li = msg.split(/ (.+)/)[1].split(/ (.+)/);
+        var cm = li[0];
+        var re = li[1];
+
+        if (cm.charAt(0) == "!") {
+            let cmdlist = ReadList(replier, room, "cmdlist", filename);
+            let isfound = false;
+            let numfound;
+
+            for (let i = 0; i < cmdlist.length; i++) {
+                if (cmdlist[i].c == cm) {
+                    isfound = true;
+                    numfound = i;
+                }
+            }
+
+            if (filename == birthdaypath) {
+                let f = re.split("월")[0];
+                let sli = re.split("월")[1].split("일");
+
+                if (toString(Number(f)) == "NaN" || toString(Number(sli[0])) == "NaN" || sli[1] != "") {
+                    replier.reply("띄어쓰기 지켜서 \"X월 X일\"의 형식으로 입력해주세요");
+                    return;
+                } else if (!sli[0].startsWith(" ")) {
+                    replier.reply("띄어쓰기 지켜서 \"X월 X일\"의 형식으로 입력해주세요");
+                    return;
+                }
+            }
+
+            if (isfound) {
+                cmdlist[numfound].r = re;
+                if (!(WriteList(replier, room, "cmdlist", cmdlist, filename)))
+                    return;
+
+                replier.reply("명령어를 성공적으로 변경하였습니다!!\n명령어: " + cm + "\n대답: " + re);
+            } else {
+                let curobj = new CmdData(cm, re);
+
+                cmdlist.push(curobj);
+                if (!(WriteList(replier, room, "cmdlist", cmdlist, filename)))
+                    return;
+                
+                replier.reply("해당 명령어가 존재하지 않아 새로 추가하였습니다.\n명령어: " + cm + "\n대답: " + re);
+            }
+        } else {
+            replier.reply("명령어는 !으로 시작해야합니다.");
+        }
+    } else {
+        if (msg.startsWith("!인스타변경"))
+            replier.reply("인스타 변경하는 방법\n!인스타변경 명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n예) !인스타변경 !지원이인스타 @ziwo.ni_zi");
+        else if (msg.startsWith("!생일변경"))
+            replier.reply("생일 변경하는 방법\n!생일변경 명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n또한 무조건 \"X월 X일\"의 형태로 입력해야함 안하면 에러나니깐 꼭 지키셈 validation 코드 짜기 개귀찮아 에러나면 책임안짐 ㅅㄱ\n예) !생일변경 !지원이생일 2월 9일");
+        else
+            replier.reply("명령어 변경하는 방법\n!변경 명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n예) !변경 !지원이는? 지원이는 귀엽다.");
     }
 }
 
@@ -192,14 +309,35 @@ function ShowList(replier, room, filename) {
     var cmdlist = ReadList(replier, room, "cmdlist", filename);
     var str = "";
 
-    for (let i = 0; i < cmdlist.length; i++) {
-        if (i != 0)
-            str += "\n";
+    if (filename == birthdaypath) {
+        cmdlist.sort(function(a, b) {
+            let ali = a.r.replace("월", "").replace("일", "").split(" ");
+            let bli = b.r.replace("월", "").replace("일", "").split(" ");
 
-        str += (cmdlist[i].c + " " + cmdlist[i].r);
+            if (ali[0] == bli[0]) {
+                return Number(ali[1]) - Number(bli[1]);
+            } else {
+                return Number(ali[0]) - Number(bli[0]); 
+            }
+        });
     }
 
-    replier.reply("🍎🍑 명령어 목록 🍎🍑" + COMPRESS + "\n\n" + str);
+    for (let i = 0; i < cmdlist.length; i++) {
+        if (i != 0)
+            str += "\n\n";
+
+        if (["!공지", "!인사"].indexOf(cmdlist[i].c) != -1 || cmdlist[i].r.length > 99)
+            str += ("📌명령어: " + cmdlist[i].c + " 📌너무 기니깐 직접 명령어를 입력해서 확인하세요");
+        else
+            str += ("📌명령어: " + cmdlist[i].c + " 📌대답: " + cmdlist[i].r);
+    }
+
+    if (filename == instapath)
+        replier.reply("🐋🌊 인스타그램 아이디 모음 🌊🐋" + COMPRESS + "\n\n" + str);
+    else if (filename == birthdaypath)
+        replier.reply("🎉🥳 생일 모음 🥳🎉" + COMPRESS + "\n\n" + str);
+    else 
+        replier.reply("🍎🍑 명령어 목록 🍎🍑" + COMPRESS + "\n\n" + str);
 }
 
 function AddUser(replier, room, user, filename) {
@@ -281,7 +419,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         }
 
         var userlist = ReadList(replier, room, "userlist", alloweduserpath);
-        var mynamelist = ReadList(replier, "서지원", "userlist", mynamelistpath);
+        var mynamelist = ReadList(replier, master_room, "userlist", mynamelistpath);
         
         Reply(replier, room, nbcmd, cmdpath);
         Reply(replier, room, nbcmd, instapath);
@@ -312,7 +450,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
           My name List
         */
 
-        if (room == "서지원") {
+        if (room == master_room) {
             if (cmd == "!내이름추가") {
                 AddUser(replier, room, option[0], mynamelistpath);
             }
@@ -330,7 +468,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
           CMD List
         */
 
-        // Only allowd user can access
+        // Only allowed user can access
         if (userlist.indexOf(nbsender) != -1 || alluser_allowed_room.indexOf(room) != -1) {
             if (cmd == "!추가") {
                 AddList(replier, room, msg, cmdpath);
@@ -340,48 +478,75 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 RemoveList(replier, room, msg, cmdpath);
             }
 
+            if (cmd == "!변경") {
+                ChangeList(replier, room, msg, cmdpath);
+            }
+
         } else {
-            if (["!추가", "!제거", "!삭제"].indexOf(cmd) != -1) {
+            if (["!추가", "!제거", "!삭제", "변경"].indexOf(cmd) != -1) {
                 replier.reply("Access Denied. Authorized Personnel Only");
             }
         }
 
         // Anyone can access
-        if (["!명령어보기", "!명령어목록", "!명령어목록보기"].indexOf(nbcmd) != -1) {
+        if (["!명령어보기", "!명령어목록", "!명령어목록보기", "!명령어모음"].indexOf(nbcmd) != -1) {
             ShowList(replier, room, cmdpath);
         }
 
-        // INSTAGRAM CMD
-        if (instaroomblacklist.indexOf(room) == -1) { // if instagram not blacked
-            if (nbcmd == "!인스타추가") {
-                replier.reply("인스타 추가하는 방법\n!추가 명령어 대답\n\n단, 명령어 부분은 절대 띄어쓰기하면 안됨 어차피 나중에 명령어 띄어쓰기 해서 입력해도 인식함\n예) !인스타추가 !지원이인스타 @ziwo.ni_zi");
-            }
-
+        // Instagram CMD
+        if (instaroom_blacklist.indexOf(room) == -1) { // if instagram not blacked
             if (userlist.indexOf(nbsender) != -1 || alluser_allowed_room.indexOf(room) != -1) {
                 if (cmd == "!인스타추가") {
-                    msg = msg.replace("!인스타추가", "!추가");
                     AddList(replier, room, msg, instapath);
                 }
 
                 if (["!인스타제거", "!인스타삭제"].indexOf(cmd) != -1) {
-                    msg = msg.replace("!인스타제거", "!제거").replace("!인스타삭제", "!삭제");
                     RemoveList(replier, room, msg, instapath);
                 }
+
+                if (cmd == "!인스타변경") {
+                    ChangeList(replier, room, msg, instapath);
+                }
             } else {
-                if (["!인스타추가", "!인스타제거"].indexOf(cmd) != -1) {
+                if (["!인스타추가", "!인스타제거", "!인스타삭제", "!인스타변경"].indexOf(cmd) != -1) {
                     replier.reply("Access Denied. Authorized Personnel Only");
                 }
             }
 
-            //모두 다 할 수 있음    
-            if (["!인스타보기", "!인스타목록", "!인스타목록보기"].indexOf(nbcmd) != -1) {
+            //Anyone can access  
+            if (["!인스타보기", "!인스타목록", "!인스타목록보기", "!인스타모음"].indexOf(nbcmd) != -1) {
                 ShowList(replier, room, instapath);
             }
         }
+        
+        // Birthday CMD
+        if (birthday_blacklist.indexOf(room) == -1) { // if instagram not blacked
+            if (userlist.indexOf(nbsender) != -1 || alluser_allowed_room.indexOf(room) != -1) {
+                if (cmd == "!생일추가") {
+                    AddList(replier, room, msg, birthdaypath);
+                }
+
+                if (["!생일제거", "!생일삭제"].indexOf(cmd) != -1) {
+                    RemoveList(replier, room, msg, birthdaypath);
+                }
+
+                if (cmd == "!생일변경") {
+                    ChangeList(replier, room, msg, birthdaypath);
+                }
+            } else {
+                if (["!생일추가", "!생일제거", "!생일삭제", "!생일변경"].indexOf(cmd) != -1) {
+                    replier.reply("Access Denied. Authorized Personnel Only");
+                }
+            }
+
+            //Anyone can access  
+            if (["!생일보기", "!생일목록", "!생일목록보기", "!생일모음"].indexOf(nbcmd) != -1) {
+                ShowList(replier, room, birthdaypath);
+            }
+        }
+
     } catch (e) {
-        let str = ReadFile(replier, "log", "errorlog.txt");
-        str +=  "\n" + room + ", " + THIS_FILENAME + ", "+ e + ", " + e.lineNumber;
-        WriteFile(replier, str, "log", "errorlog.txt");
+        Log.debug(e + ", line: " + e.lineNumber + " from " + room);
     }
 }
 
@@ -427,10 +592,14 @@ function gDate(choice) {
 }
 
 function ReadFile(replier, room, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
+    var file = new java.io.File(filepath + "/" + room + "/" + filename);
 
-    if (!file.exists())
-        return null;
+    if (!file.exists()){
+        let newfile = file.createNewFile();
+        l = "";
+        
+        return l;
+    }
 
     var fis = new java.io.FileInputStream(file);
     var isr = new java.io.InputStreamReader(fis);
@@ -453,7 +622,7 @@ function ReadFile(replier, room, filename) {
 }
 
 function WriteFile(replier, data, room, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
+    var file = new java.io.File(filepath + "/" + room + "/" + filename);
 
     if (!file.exists())
         return;
