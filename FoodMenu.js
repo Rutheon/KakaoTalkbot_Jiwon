@@ -3,130 +3,109 @@
   음식 메뉴 추천
 */
 
+const baseModule = require("baseval.js");
+const bv = new baseModule();
+
 const THIS_FILENAME = "FoodMenu";
-const filepath = "/storage/emulated/0/Documents/KakaoBot/";
-const foldername = "FoodMenu";
+const ROOM_NAME = "MenuRoom";
 
-function FoodMenu(type, replier) {
-    var file = new java.io.File(filepath + type);
+const menu = {};
 
-    if (!file.exists()) {
-        replier.reply("음...");
-        replier.reply("딱히 추천해드릴만한게 없네요 힝");
-
-        return;
-    }
-
-    var fis = new java.io.FileInputStream(file);
-    var isr = new java.io.InputStreamReader(fis);
-    var br = new java.io.BufferedReader(isr);
-    var line = "";
-    var menulist = [];
-
-    for (let i = 0; (line = br.readLine()) != null; i++) {
-        menulist[i] = line;
-    }
-
-    if (menulist.length != 0) {
-        let result = Math.floor(Math.random() * menulist.length);
-        replier.reply(menulist[result]);
-    } else {
-        replier.reply("음...");
-        replier.reply("딱히 추천해드릴만한게 없네요 힝");
-    }
-
-    fis.close();
-    isr.close();
-    br.close();    
-}
+menu.FOOD_PATH = "foodmenu.txt";
+menu.NIGHT_PATH = "nightmenu.txt";
+menu.SNACK_PATH = "snackmenu.txt";
+menu.DRINK_PATH = "drink.txt";
 
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     try {
-        var list = msg.split(" ");
-        var cmd = list[0];
-        var option = [];
-        var nbcmd = msg.replace(/\s/g, "");
+        var nbmsg = msg.replace(/\s/g, "");
+        var cmd = msg.split(" ")[0];
+        //var option = msg.split(/ (.+)/)[1].split(" ");
 
-        // options after cmd
-        for (let i = 0; i < list.length; i++) {
-            if (i != 0) {
-                option[i-1] = list[i];
-            }
+        if (nbmsg == "!점심추천" || nbmsg == "!저녁추천") {
+            FoodMenu(menu.FOOD_PATH, replier);
         }
 
-        if (nbcmd == "!점심추천" || nbcmd == "!저녁추천") {
-            FoodMenu("foodmenu.txt", replier);
+        if (nbmsg == "!야식추천") {
+            FoodMenu(menu.NIGHT_PATH, replier);
         }
 
-        if (nbcmd == "!야식추천") {
-            FoodMenu("nightmenu.txt", replier);
+        if (nbmsg == "!간식추천") {
+            FoodMenu(menu.SNACK_PATH, replier);
         }
 
-        if (nbcmd == "!간식추천") {
-            FoodMenu("snackmenu.txt", replier);
+        if (nbmsg == "!음료추천") {
+            FoodMenu(menu.DRINK_PATH, replier);
         }
 
-        if (nbcmd == "!음료추천") {
-            FoodMenu("drink.txt", replier);
+        if (nbmsg == "!아침추천") {
+            Math.floor(Math.random() * 2) ? replier.reply("아침은 그냥 콩나물 국밥이나 드십쇼 형님") : replier.reply("아침은 그냥 오리고기나 드십쇼 형님");
         }
 
-        if (nbcmd == "!아침추천") {
-            replier.reply("아침은 그냥 콩나물 국밥이나 드십쇼 형님");
-        }
-
-        if (nbcmd == "!디저트추천") {
+        if (nbmsg == "!디저트추천") {
             replier.reply("디저트는 버블티나 드십쇼");
         }
 
-        if (nbcmd == "!아침추천이유") {
-            replier.reply("지원이가 고1때 미국 오기 전에 한국에서 마지막으로 먹었던 아침식사가 콩나물 국밥이었기 때문입니당");
+        if (["!점심추가", "!저녁추가", "!메뉴추가", "!점심메뉴추가", "!저녁메뉴추가"].indexOf(cmd) != -1) {
+            AddMenu(msg, menu.FOOD_PATH, replier);
         }
-        
-        if (["!점심추가", "!저녁추가", "!메뉴추가"].indexOf(cmd) != -1) {
-            let foodlist = ReadFile(replier, foldername, "foodmenu.txt");
+
+        if (["!야식추가", "!야식메뉴추가"].indexOf(cmd) != -1) {
+            AddMenu(msg, menu.NIGHT_PATH, replier);
+        }
+
+        if (["!간식추가", "!간식메뉴추가"].indexOf(cmd) != -1) {
+            AddMenu(msg, menu.SNACK_PATH, replier);
+        }
+
+        if (["!음료추가", "!음료메뉴추가"].indexOf(cmd) != -1) {
+            AddMenu(msg, menu.DRINK_PATH, replier);
+        }
+
+        if (["!메뉴보기", "!메뉴판보기"].indexOf(cmd) != -1) {
+            ShowMenu(replier);
         }
     } catch (e) {
-        let str = ReadFile(replier, "log", "errorlog.txt");
-        str +=  "\n" + room + ", " + THIS_FILENAME + ", "+ e + ", " + e.lineNumber;
-        WriteFile(replier, str, "log", "errorlog.txt");
+        Log.debug(e + ", line: " + e.lineNumber + " from " + room);
     }
 }
 
-function ReadFile(replier, room, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
+function FoodMenu(type, replier) {
+    var menulist = bv.ReadList(ROOM_NAME, type);
 
-    if (!file.exists())
-        return null;
-
-    var fis = new java.io.FileInputStream(file);
-    var isr = new java.io.InputStreamReader(fis);
-    var br = new java.io.BufferedReader(isr);
-    var line = "";
-    var str = "";
-
-    for (let i = 0; (line = br.readLine()) != null; i++) {
-        if (i != 0)
-            str += "\n";
-
-        str += line;
+    if (menulist.length == 0) {
+        replier.reply("음...");
+        replier.reply("딱히 추천해드릴만한게 없네요... 힝");
+    } else {
+        let result = Math.floor(Math.random() * menulist.length);
+        replier.reply(menulist[result]);
     }
-
-    fis.close();
-    isr.close();
-    br.close();
-
-    return str;
 }
 
-function WriteFile(replier, data, room, filename) {
-    var file = new java.io.File(filepath + room + "/" + filename);
+function AddMenu(msg, type, replier) {
+    let menutoadd = msg.split(/ (.+)/)[1];
 
-    if (!file.exists())
-        return;
+    if (menutoadd != "" && menutoadd != null) {
+        var menulist = bv.ReadList(ROOM_NAME, type);
 
-    var fos = new java.io.FileOutputStream(file);
-    var content = new java.lang.String(data);
+        if (menulist.indexOf(menutoadd) == -1) {
+            menulist.push(menutoadd);
+            bv.WriteList(menulist, ROOM_NAME, type);
+            replier.reply(menutoadd + "이(가) 메뉴 목록에 성공적으로 추가되었습니다!");
+        } else {
+            replier.reply(menutoadd + "은(는) 이미 메뉴 목록에 있습니다.");
+        }
+    } else {
+        replier.reply("명령어 뒤에 음식 이름하고 같이 입력해주세용");
+    }
+}
 
-    fos.write(content.getBytes());
-    fos.close();
+function ShowMenu(replier) {
+    var str = "🍽 지원봇이 추천하는 모든 음식 메뉴판입니당 🍽" + bv.COMPRESS;
+
+    for (var index in menu) {
+        str += "\n\n" + bv.ReadFile(ROOM_NAME, menu[index]);
+    }
+
+    replier.reply(str);
 }
