@@ -81,7 +81,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             let hour = t[0];
             let min = t[1];
             
-            replier.reply("대한민국 " + month + "월 " + day + "일 " + hour + "시 " + min + "분 기준\n" + "한강물의 온도는 섭씨 " + temp + "도입니다.\n*한강 폭우로 인해 8월 3일 이후 측정이 중단되었으니 양해부탁드립니다.");
+            replier.reply("대한민국 " + month + "월 " + day + "일 " + hour + "시 " + min + "분 기준\n" + "한강물의 온도는 섭씨 " + temp + "도입니다.");
         }
 
         if (nbcmd == "!코로나") {

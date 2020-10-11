@@ -3,7 +3,7 @@
 */
 
 const THIS_FILENAME = "CustomCMD";
-const filepath = "/storage/emulated/0/KakaobotData";
+const FILE_PATH = "/storage/emulated/0/KakaobotData";
 const cmdpath = "cmdlist.txt";
 const instapath = "instagramlist.txt";
 const birthdaypath = "birthdaypath.txt";
@@ -11,7 +11,7 @@ const alloweduserpath = "alloweduserlist.txt";
 const mynamelistpath = "mynamelist.txt";
 
 const roomblacklist = [];
-const master_room = "서지원";
+const MASTER_ROOM = "서지원";
 const instaroom_blacklist = ["뽀로로와친구들", "차에탄깡따구", "오버액션사랑방", "키보드팬들모여라"];
 const birthday_blacklist = ["차에탄깡따구"];
 const alluser_allowed_room =["뽀로로와친구들"];
@@ -25,7 +25,7 @@ function CmdData(c, r) {
     this.r = r;
 }
 
-function Reply(replier, room, msg, filename) {
+function Reply(replier, sender, room, msg, filename) {
     var cmdlist = ReadList(replier, room, "cmdlist", filename);
     
     for (let i = 0; i < cmdlist.length; i++) {
@@ -35,13 +35,13 @@ function Reply(replier, room, msg, filename) {
                     hello_time[room] = 0;
 
                 if (Number(gDate("getTime")) - hello_time[room] > hello_delay) {
-                    replier.reply(cmdlist[i].r.replace(/\\n/g, "\n").replace(/\\z/g, COMPRESS)); // \n는 enter, \z는 자세히보기
+                    replier.reply(cmdlist[i].r.replace(/\\n/g, "\n").replace(/\\z/g, COMPRESS).replace(/\\u/g, sender)); // \n는 enter, \z는 자세히보기, \u는 입력한 사람 이름
                     hello_time[room] = gDate("getTime");
                 } else {
                     replier.reply("skipped");
                 }
             } else {
-                replier.reply(cmdlist[i].r.replace(/\\n/g, "\n").replace(/\\z/g, COMPRESS));
+                replier.reply(cmdlist[i].r.replace(/\\n/g, "\n").replace(/\\z/g, COMPRESS).replace(/\\u/g, sender));
             }
             
         }
@@ -50,7 +50,7 @@ function Reply(replier, room, msg, filename) {
 
 // Read File and Return Data
 function ReadList(replier, room, type, filename) {
-    var file = new java.io.File(filepath + "/" + room + "/" + filename);
+    var file = new java.io.File(FILE_PATH + "/" + room + "/" + filename);
 
     if (!file.exists()) {
         let newfile = file.createNewFile();
@@ -96,7 +96,7 @@ function ReadList(replier, room, type, filename) {
 
 // boolean type false if no file exists
 function WriteList(replier, room, type, data, filename) {
-    var file = new java.io.File(filepath + "/" + room + "/" + filename);
+    var file = new java.io.File(FILE_PATH + "/" + room + "/" + filename);
 
     if (!file.exists())
         return false;
@@ -397,6 +397,7 @@ function ShowUser(replier, room, filename) {
 // Main
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     try {
+        msg = msg.replace(/\n/g, "\\n");
         var list = msg.split(" ");
         var cmd = list[0];
         var option = [];
@@ -419,10 +420,11 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         }
 
         var userlist = ReadList(replier, room, "userlist", alloweduserpath);
-        var mynamelist = ReadList(replier, master_room, "userlist", mynamelistpath);
+        var mynamelist = ReadList(replier, MASTER_ROOM, "userlist", mynamelistpath);
         
-        Reply(replier, room, nbcmd, cmdpath);
-        Reply(replier, room, nbcmd, instapath);
+        Reply(replier, sender, room, nbcmd, cmdpath);
+        Reply(replier, sender, room, nbcmd, instapath);
+        Reply(replier, sender, room, nbcmd, birthdaypath);
 
         /*
           Allowd USER List
@@ -450,7 +452,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
           My name List
         */
 
-        if (room == master_room) {
+        if (room == MASTER_ROOM) {
             if (cmd == "!내이름추가") {
                 AddUser(replier, room, option[0], mynamelistpath);
             }
@@ -483,7 +485,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             }
 
         } else {
-            if (["!추가", "!제거", "!삭제", "변경"].indexOf(cmd) != -1) {
+            if (["!추가", "!제거", "!삭제", "!변경"].indexOf(cmd) != -1) {
                 replier.reply("Access Denied. Authorized Personnel Only");
             }
         }
@@ -592,7 +594,7 @@ function gDate(choice) {
 }
 
 function ReadFile(replier, room, filename) {
-    var file = new java.io.File(filepath + "/" + room + "/" + filename);
+    var file = new java.io.File(FILE_PATH + "/" + room + "/" + filename);
 
     if (!file.exists()){
         let newfile = file.createNewFile();
@@ -622,7 +624,7 @@ function ReadFile(replier, room, filename) {
 }
 
 function WriteFile(replier, data, room, filename) {
-    var file = new java.io.File(filepath + "/" + room + "/" + filename);
+    var file = new java.io.File(FILE_PATH + "/" + room + "/" + filename);
 
     if (!file.exists())
         return;

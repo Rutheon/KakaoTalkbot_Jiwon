@@ -12,7 +12,7 @@ const count300 = {}; // for chats counting 300+
 const count300_blacklist = ["오버액션사랑방", "키보드팬들모여라"];
 const count300_swear_room = ["유학생들모여라"];
 const count300path = "count300.txt";
-const count300time = "count300time.txt";
+const count300timepath = "count300time.txt";
 
 // Main
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
@@ -46,7 +46,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 
         if (count300[room] > 300) {
             let tempcount = ReadFile(room, count300path);
-            let time = ReadFile(room, count300time);
+            let time = ReadFile(room, count300timepath);
             let allcount;
 
             if (tempcount == "" || tempcount == null || tempcount == undefined)
@@ -56,7 +56,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 
             if (allcount == 0) {
                 time = date.getTime();
-                WriteFile(time, room, count300time);
+                WriteFile(time, room, count300timepath);
             }
 
             count300[room] = 0;
@@ -77,21 +77,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 } else {
                     initday = 0;
                 }
-
-                if (allcount == 100)
-                    replier.reply("ㅅㅂㅍ이 ㅂㅍ이다! 꺄륵~");
-                
-                if (allcount == 200)
-                    replier.reply("ㅅㅂㅍ이 ㅇㅂㅍ이다! 꺄륵~");
                 
                 if (allcount == 300)
-                    replier.reply("우왕 🎉 ㅅㅂㅍ이 드디어 ㅅㅂㅍ이 됐당! 🎉 다들 축하해주세요~!");
-
-                if (allcount == 400)
-                    replier.reply("ㅅㅂㅍ이 ㅅㅂㅍ이다! 꺄륵~");
-                
-                if (allcount == 500)
-                    replier.reply("ㅅㅂㅍ이 ㅇㅂㅍ이다! 꺄륵~");
+                    replier.reply("🎉 ㅅㅂㅍ이 드디어 ㅅㅂㅍ이 됐당! 🎉");
                     
                 replier.reply("삼백플 " + allcount + "번째 달성 축하드립니당 ~~ 🥳🎉");
 
